@@ -115,7 +115,4 @@ def init_sentry():
 
     To change the URL, please specify a corresponding ENV variable.
     """
-    sentry_sdk.init(
-        os.environ.get('SENTRY_URL', 'https://e489691c2e214c03961e18069a71d76c@sentry.tribler.org/6'),
-        traces_sample_rate=1.0
-    )
+    sentry_sdk.init(os.environ.get('SENTRY_URL'), traces_sample_rate=1.0)
