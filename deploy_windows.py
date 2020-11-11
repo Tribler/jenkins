@@ -7,12 +7,16 @@ variable:
 - WORKSPACE : Jenkins workspace (set by jenkins itself)
 """
 from __future__ import print_function
+
 import os
 import time
 
-from deployment_utils import fetch_latest_build_artifact, print_and_exit, tribler_is_installed, check_sha256_hash
+from deployment_utils import check_sha256_hash, fetch_latest_build_artifact, init_sentry, print_and_exit, \
+    tribler_is_installed
 
 if __name__ == '__main__':
+    init_sentry()
+
     start_time = time.time()
 
     # Step 1: fetch the latest Tribler installer from Jenkins

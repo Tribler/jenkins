@@ -2,11 +2,14 @@
 This script rollbacks specific VMs.
 """
 from __future__ import print_function
+
 import os
 import sys
-
 import time
+
 from pyproxmox import prox_auth, pyproxmox
+
+from deployment_utils import init_sentry
 
 
 def print_env_variables():
@@ -49,7 +52,10 @@ def rollback_vm(vm_id):
         status = proxmox.getVirtualStatus("proxmox", vm_id)['data']['status']
         print("Waiting for machine to come online")
 
+
 if __name__ == '__main__':
+    init_sentry()
+
     if len(sys.argv) > 1 and sys.argv[1] == "show_env":
         # Print environment variables for debugging
         print_env_variables()

@@ -27,6 +27,8 @@ import mss
 import requests
 from requests import ConnectionError
 
+from deployment_utils import init_sentry
+
 
 def error(msg):
     """ Prints error and exits """
@@ -107,10 +109,12 @@ def run_tribler():
     else:
         print('Tribler is already running')
 
+
 def remove_dot_tribler_directory():
     """ Remove .Tribler directory if exists """
     if os.path.exists(TRIBLER_DOT_DIR):
         shutil.rmtree(TRIBLER_DOT_DIR)
+
 
 def check_dot_tribler_dir():
     """ Checks if .Tribler directory is present """
@@ -122,9 +126,9 @@ def check_dot_tribler_dir():
 def check_tribler_core_is_running():
     """ Checks if Tribler core is running """
 
-    backoff = 2     # backup factor
-    delay = 0.1     # 100ms
-    timeout = 120   # 120 seconds
+    backoff = 2  # backup factor
+    delay = 0.1  # 100ms
+    timeout = 120  # 120 seconds
 
     starttime = time.time()
     for _ in range(10):  # 10 attempts
@@ -158,6 +162,7 @@ def check_tribler_core_is_running():
     pending_exception = sys.exc_info()[1]
     if pending_exception is not None:
         error(pending_exception.message)
+
 
 def take_screenshots():
     """ Takes screenshots of the screen """
@@ -211,6 +216,8 @@ def check_error_logs():
 
 
 if __name__ == '__main__':
+    init_sentry()
+
     # check if the directory & executable exists
     check_tribler_directory()
 
