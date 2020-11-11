@@ -109,6 +109,7 @@ def tribler_is_installed():
 
     return True
 
+
 def init_sentry():
     """ Inits the sentry sdk by setting up a URL and a trace sample rate
 
