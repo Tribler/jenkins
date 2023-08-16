@@ -38,15 +38,18 @@ def get_sha256_for_type(sha256_file_path, type_selector):
     return None
 
 
-def check_sha256_hash(file_path, target_sha256_hash):
+def compute_sha256_hash(file_path):
     sha256_hash = hashlib.sha256()
     with open(file_path, "rb") as f:
         # Read and update hash string value in blocks of 4K
         for byte_block in iter(lambda: f.read(4096), b""):
             sha256_hash.update(byte_block)
-        hex_sha256_hash = sha256_hash.hexdigest()
+        return sha256_hash.hexdigest()
 
-    return hex_sha256_hash == target_sha256_hash
+
+def check_sha256_hash(file_path, target_sha256_hash):
+    computed_sha256_hash = compute_sha256_hash(file_path)
+    return computed_sha256_hash == target_sha256_hash
 
 
 def get_artifact_extension(build_type):

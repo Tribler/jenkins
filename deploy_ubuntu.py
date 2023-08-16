@@ -14,7 +14,7 @@ import os
 import time
 
 from deployment_utils import check_sha256_hash, fetch_latest_build_artifact, init_sentry, print_and_exit, \
-    tribler_is_installed
+    tribler_is_installed, compute_sha256_hash
 
 if __name__ == '__main__':
     init_sentry()
@@ -27,15 +27,19 @@ if __name__ == '__main__':
     if not job_url:
         print_and_exit('JENKINS_JOB_URL is not set')
 
-    INSTALLER_FILE, HASH = fetch_latest_build_artifact(job_url, build_type)
+    INSTALLER_FILE, EXPECTED_FILE_HASH = fetch_latest_build_artifact(job_url, build_type)
 
     print(f"Jenkins Job URL: {job_url}")
     print(f"Linux installer file: {INSTALLER_FILE}")
-    print(f"Linux installer hash: {HASH}")
+    print(f"Linux installer hash: {EXPECTED_FILE_HASH}")
 
     # Step 2: check SHA256 hash
-    if HASH and not check_sha256_hash(INSTALLER_FILE, HASH):
-        print_and_exit("SHA256 of file does not match with target hash %s" % HASH)
+    if EXPECTED_FILE_HASH is not None:
+        actual_file_hash = compute_sha256_hash(INSTALLER_FILE)
+        if actual_file_hash != EXPECTED_FILE_HASH:
+            error_message = "SHA256 of the installer file does not match with target hash\n" \
+                            f"Actual: {actual_file_hash} != Expected: {EXPECTED_FILE_HASH}"
+            print_and_exit(error_message)
 
     # Step 3: Remove dpkg lock if exists
     TRIBLER_PASSWORD = os.environ.get('TRIBLER_PASSWORD')
