@@ -121,8 +121,8 @@ pipeline {
                             set PYTHONPATH=%PYTHONPATH%;./scripts/application_tester;./src
 
                             REM Run the Python script
-                            echo python ./scripts/application_tester/main.py "%TRIBLER_EXE_PATH%" --duration %DURATION%
-                            python ./scripts/application_tester/main.py "%TRIBLER_EXE_PATH%" --duration %DURATION%
+                            echo python ./scripts/application_tester/main.py "%TRIBLER_EXE_PATH%" --fragile --duration %DURATION%
+                            python ./scripts/application_tester/main.py "%TRIBLER_EXE_PATH%" --fragile --duration %DURATION%
 
                             REM Deactivating the virtual environment
                             call venv\\Scripts\\deactivate.bat
@@ -139,7 +139,7 @@ pipeline {
             }
             post {
                 success {
-                    archiveArtifacts artifacts: 'tribler/output/**', fingerprint: true, allowEmptyArchive: true
+                    archiveArtifacts artifacts: 'output/**', fingerprint: true, allowEmptyArchive: false
                 }
             }
         }
